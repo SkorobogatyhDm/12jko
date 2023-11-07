@@ -1,0 +1,16 @@
+1:/usr/sbin
+2:/bin
+4:/bin
+6:/var/cache/man
+9:/var/spool/news
+13:/bin
+39:/run/ircd
+41:/var/lib/gnats
+65534:/nonexistent
+100:/nonexistent
+101:/run/systemd
+102:/run/systemd
+103:/nonexistent
+104:/run/systemd
+106:/run/sshd
+1000:/home/admin1
