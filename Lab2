@@ -1,0 +1,20 @@
+.
+├── 06.11.2023 -> dir/current_date/06.11.2023
+├── cat1
+│   ├── cat2
+│   │   ├── cat3
+│   │   │   └── cat7
+│   │   └── cat5
+│   ├── cat4
+│   └── cat8
+├── dir
+│   └── current_date
+│       └── 06.11.2023
+├── Good
+│   └── 12jko
+│       ├── Lab2
+│       ├── Labaratoka 1
+│       └── Labaratorka 2
+└── Labaratorka 2
+
+13 directories, 4 files
