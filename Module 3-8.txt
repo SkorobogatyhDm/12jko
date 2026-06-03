@@ -1,0 +1,26 @@
+#_______________________________________BR-SRV__________________________________________
+
+mount -o loop /dev/sr0 /mnt
+cp /mnt/playbook/get_hostname_address.yml /etc/ansible/playbook.yml
+mkdir -p /etc/ansible/PC-INFO
+vim /etc/ansible/playbook.yml
+
+- name: PC-INFO
+  hosts: LMX
+  tasks:
+    - name: получение данных с хоста
+      copy:
+        dest: /etc/ansible/PC-INFO/{{ ansible_hostname }}.txt
+        content: |
+          Hostname: {{ ansible_hostname }}
+          IP_Address: {{ ansible_default_ipv4.address }}
+      delegate_to: 127.0.0.1
+
+vim /etc/ansible/hosts
+
+[LMX] 
+ hosts  
+ HQ-SRV  
+ HQ-CLI
+
+ansible-playbook /etc/ansible/playbook.yml

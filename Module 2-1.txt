@@ -1,0 +1,111 @@
+#_______________________________________BR-SRV__________________________________________
+
+apt-get update && apt-get install task-samba-dc -y
+
+rm -rf /etc/samba/smb.conf
+#rm -rf /var/lib/samba/
+#rm -rf /var/cache/samba/
+
+mkdir -p /var/lib/samba/sysvol
+
+echo search au-team.irpo nameserver 127.0.0.1 >> /etc/net/ifaces/ens18/resolv.conf
+
+samba-tool domain provision
+
+Enter(x5) > P@ssw0rd(x2)
+
+cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
+
+systemctl enable --now samba
+
+samba-tool group add hq
+for i in {1..5}; do
+> samba-tool user add hquser$i P@ssw0rd;
+> samba-tool user setexpery hquser$i --noexpiry;
+> samba-tool group addmembers hq hquser$i;
+done
+
+если при создании пользователей не будет никаких ошибок то вы все прописали правильно
+проверить можно с помощью команд:
+
+	samba-tool group listmembers hq
+
+сначала получают билет через kinit, а затем проверяют его наличие с помощью klist
+
+	kinit Administrator
+	klist
+
+#_______________________________________HQ-RTR__________________________________________
+
+vim /etc/dhcp/dhcpd.conf
+
+# See dhcpd.conf(5) for further configuration
+
+ddns-update-style none;
+
+subnet 192.168.200.0 netmask 255.255.255.240 {
+    option routers                  192.168.200.1;
+    option subnet-mask              255.255.255.240;
+
+    option nis-domain               "domain.org";
+    option domain-name              "au-team.irpo";
+   -option domain-name-servers      192.168.100.2;
+   +option domain-name-servers      192.168.3.2; 
+
+    range dynamic-bootp 192.168.200.2 192.168.200.7;
+    default-lease-time 21600;
+    max-lease-time 43200;
+}
+
+systemctl restart dhcpd
+
+#_______________________________________HQ-CLI__________________________________________
+
+systemctl restart network
+
+Далее:
+
+	Заходим на HQ-CLI --> Меню(снизу слева) --> Раздел Приложения --> Администрирование --> Центр управления системой --> Раздел Пользователи --> 	Аутентификация
+
+	Выбираем пункт Домен Active Directory
+	
+	Вводим au-team.irpo в поле Домен
+
+	Листаем вниз и нажимаем применить
+
+далее нужно прописать права для пользователей группы hq
+
+	roleadd hq wheel
+
+далее заходим в файл по пути nano /etc/sudoers.d/hq
+
+вставляем в этот файл
+
+	Cmnd_Alias SHELLCMD = /bin/cat, /bin/grep, /usr/bin/id  
+  
+	WHEEL_USERS ALL=(ALL:ALL) SHELLCMD
+
+
+
+(старая хрень, но рабочая "не точно")
+
+su-
+# toor
+systemctl restart network
+cat /etc/resolv.conf
+domain au-team.irpo
+nameserver 192.168.0.2
+
+apt-get update && apt-get install -y task-auth-ad-sssd
+
+acc 
+
+> Заходим в Аутенфикацию > Нажимаем на "Домен Active Directory" > вводим в "Домен": "au-team.irpo" > Нажимаем "применить"
+
+reboot
+
+roleadd hq wheel
+echo "Cmnd_Alias SHELLCMD = /bin/cat, /bin/grep, /usr/bin/id" > /etc/sudoers.d/hq
+echo "WHEEL_USERS ALL=(ALL:ALL) SHELLCMD" >> /etc/sudoers.d/hq
+
+

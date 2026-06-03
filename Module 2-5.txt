@@ -1,0 +1,24 @@
+#_______________________________________BR-SRV__________________________________________
+apt-get update && apt-get install ansible sshpass -y
+
+vim /etc/ansible/hosts
+(смотрите какие у вас ip)
+br-rtr ansible_host=192.168.1.1 ansible_user=net_admin ansible_password=P@ssword
+hq-rtr ansible_host=10.10.10.1 ansible_user=net_admin ansible_password=P@ssword
+hq-cli ansible_host=192.168.200.2 ansible_user=user ansible_password=resu
+hq-srv ansible_host=192.168.100.2 ansible_user=sshuser ansible_password=P@ssword ansible_port=2026
+
+vim  /etc/ansible/ansible.cfg
+Раскоментируем
+
+	inventory = /etc/ansible/hosts
+	host_key_checking = False
+
+cd /etc/ansible/
+	ansible all -m ping
+
+Если у вас выводит кучу красного текста, необходимо перезапустить sshd на всех машинках которые указаны в ansible.cfg
+systemctl restart sshd
+
+Если и это не сработало то вы проебались в /etc/ansible/hosts(скорее всего, это 90%)
+

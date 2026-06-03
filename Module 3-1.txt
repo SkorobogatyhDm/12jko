@@ -1,0 +1,18 @@
+#_______________________________________BR-SRV__________________________________________
+
+
+mcedit(или vim) import.sh
+
+#!/bin/bash
+
+mount -o loop /dev/sr0 /mnt
+
+FILE="/mnt/Users.csv"
+
+while IFS=";" read -r firstname lastname role phone ou street zip city country password; do
+	password=$(echo "$password" | tr -d '[:space:]') 
+	samba-tool user add "$firstname.$lastname" "$password"
+done < <(tail -n +2 "$FILE")
+
+chmod +x import.sh
+./import.sh

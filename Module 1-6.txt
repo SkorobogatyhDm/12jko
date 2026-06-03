@@ -1,0 +1,36 @@
+_______________________________________HQ-RTR__________________________________________
+
+mkdir -p /etc/net/ifaces/gre1
+vim /etc/net/ifaces/gre1/options
+
+	TYPE=iptun
+	TUNTYPE=gre
+	TUNLOCAL=172.16.1.2
+	TUNREMOTE=172.16.2.2
+	TUNOPTIONS=ttl 64
+	HOST=ens18
+
+
+echo 10.10.10.1/30 > /etc/net/ifaces/gre1/ipv4address
+systemctl restart network
+
+Проверка 
+	ip a или ip -c a
+_______________________________________BR-RTR__________________________________________
+
+mkdir -p /etc/net/ifaces/gre1
+vim /etc/net/ifaces/gre1/options
+
+	TYPE=iptun
+	TUNTYPE=gre
+	TUNLOCAL=172.16.2.2
+	TUNREMOTE=172.16.1.2
+	TUNOPTIONS=ttl 64
+	HOST=ens18
+
+echo 10.10.10.2/30 > /etc/net/ifaces/gre1/ipv4address
+systemctl restart network
+
+Проверка 
+	ip a или ip -c a
+

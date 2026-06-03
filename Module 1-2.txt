@@ -1,0 +1,78 @@
+#_______________________________________ISP_____________________________________________
+Редактируем файл по пути /etc/net/sysctl.conf на хосте ISP
+net.ipv4.ip_forward = 1
+
+cd  /etc/net/ifaces/ens19
+	vim options
+		TYPE=eth
+	vim ipv4address
+		172.16.1.1/28
+	vim ipvroute 
+		default via 192.168.0.n (может быть и другой ip)
+	vim resolv.conf
+		nameserver 8.8.8.8
+
+cd  /etc/net/ifaces/ens20
+	vim options
+		TYPE=eth
+	vim ipv4address
+		172.16.2.1/28
+	vim ipvroute 
+		default via 192.168.0.n (может быть и другой ip)
+	vim resolv.conf
+		nameserver 8.8.8.8
+
+systemctl restart network
+
+#_______________________________________HQ-RTR_____________________________________________
+
+Редактируем файл по пути /etc/net/sysctl.conf 
+net.ipv4.ip_forward = 1
+
+cd  /etc/net/ifaces/ens18
+	vim options
+		TYPE=eth
+	vim ipv4address
+		172.16.1.2/28
+	vim ipvroute 
+		default via 172.16.1.1
+	vim resolv.conf
+		nameserver 8.8.8.8
+
+#_______________________________________BR-RTR_____________________________________________
+
+Редактируем файл по пути /etc/net/sysctl.conf 
+net.ipv4.ip_forward = 1
+
+cd  /etc/net/ifaces/ens18
+	vim options
+		TYPE=eth
+	vim ipv4address
+		172.16.2.2/28
+	vim ipvroute 
+		default via 172.16.2.1
+	vim resolv.conf
+		nameserver 8.8.8.8
+
+cd  /etc/net/ifaces/ens19
+	vim options
+		TYPE=eth
+	vim ipv4address
+		192.168.0.1/28
+	vim ipvroute 
+		default via 172.16.2.2
+	vim resolv.conf
+		nameserver 8.8.8.8
+
+
+#_______________________________________BR-SRV_____________________________________________
+
+cd  /etc/net/ifaces/ens18
+	vim options
+		TYPE=eth
+	vim ipv4address
+		192.168.0.2/28
+	vim ipvroute 
+		default via 172.16.2.2
+	vim resolv.conf
+		nameserver 8.8.8.8

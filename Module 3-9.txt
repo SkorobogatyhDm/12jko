@@ -1,0 +1,23 @@
+#_______________________________________HQ-SRV__________________________________________
+
+apt-get update && apt-get install  python3-module-systemd fail2ban -y
+
+vim /etc/fail2ban/jail.d/sshd.local
+
+[DEFAULT]
+bantime = 60
+findtime = 600
+[sshd]
+enabled = true
+port = 2026
+filter = sshd
+maxretry = 2
+backend = systemd
+
+systemctl enable --now fail2ban
+
+# На BR-SRV|HQ-CLI пытайтесь зайти в учетную запись sshuser, неверно вводите пароли 2-3 раза, затем на HQ-SRV
+
+fail2ban-client status sshd
+
+# Там должен быть забаненный адрес, который провалил попытки входа.

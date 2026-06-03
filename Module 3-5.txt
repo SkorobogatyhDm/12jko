@@ -1,0 +1,30 @@
+#_______________________________________HQ-SRV__________________________________________
+apt-get update && apt-get install cups cups-pdf -y
+vim /etc/cups/cupsd.conf
+
+Listen 192.168.100.2:631
+
+cupsctl --share-printers --remote-any
+systemctl enable --now cups
+
+systemctl status cups
+
+
+#_______________________________________HQ-CLI__________________________________________
+
+lpadmin -p HQ-PDF -E -v ipp://192.168.100.2/printers/Cups-PDF -m everywhere
+lpadmin -d HQ-PDF
+
+В поиске ввести "Print"(или принтер) > Нажать на "Настройки принтера"(Print Settings) > Далее нажать на HQ-PDF > Print Test Page(Отсканировать тестовую страницу)
+
+
+#_______________________________________HQ-SRV__________________________________________
+
+
+cp /var/spool/cups/d00001-001 /raid/nfs/Print.pdf
+
+chmod 777 /raid/nfs/Print.pdf
+
+#_______________________________________HQ-CLI__________________________________________
+
+На рабочем столе нажать на  домашнюю папку > затем подняться на два уровня (До "/") > Найти /mnt/nft > Проверить PDF на валидность.

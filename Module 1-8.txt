@@ -1,0 +1,19 @@
+#___________________________________ISP+HQ-RTR+BR-RTR_______________________________________
+
+apt-get update && apt-get install iptables -y
+
+iptables -t nat -A POSTROUTING -o ens18 -j MASQUERADE
+iptables-save > /etc/sysconfig/iptables
+systemctl enable --now iptables network
+systemctl restart iptables 
+systemctl restart network
+systemctl status iptables
+
+
+#________________________________HQ-SRV+HQ-SRV+BR-SRV__________________________________
+
+echo nameserver 8.8.8.8 > /etc/net/iface/resolv.conf
+
+Проверка
+	ping -c3 8.8.8.8
+	ping -c3 ya.ru

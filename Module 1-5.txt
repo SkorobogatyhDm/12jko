@@ -1,0 +1,17 @@
+#___________________________________HQ-SRV+BR-SRV_______________________________________
+
+apt-get update && apt-get install openssh-server
+
+Все дальнейшие изменения производятся в конфигурационном файле /etc/openssh/sshd_config на хостах HQ-SRV и BR-SRV (найти и раскаментировать)
+
+	Port 2026
+	AllowUsers sshuser
+	MaxAuthTries 2
+	Banner /etc/openssh/banner 
+
+echo "Authorized access only" > /etc/openssh/banner
+
+systemctl restart sshd
+
+Проверка
+	ssh sshuser@192.168.100.2 -p 2026

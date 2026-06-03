@@ -1,0 +1,61 @@
+#_______________________________________HQ-RTR__________________________________________
+
+apt-get update && apt-get install frr -y
+
+vim /etc/frr/daemons
+	ospfd=yes
+
+systemctl enable --now frr
+
+vtysh
+
+conf t
+router ospf
+passive-interface default
+network 192.168.100.0/27 area 0
+network 192.168.200.0/28 area 0
+network 192.168.99.0/29 area 0
+network 10.10.10.0/30 area 0
+exit
+interface gre1
+no ip ospf passive
+ip ospf authentication message-digest
+ip ospf message-digest-key 1 md5 P@ssw0rd
+end
+wr mem
+ex
+
+vim /etc/net/sysctl.conf
+	net.ipv4.ip_forward = 1
+systemctl restart network
+
+
+#_______________________________________BR-RTR__________________________________________
+
+apt-get update && apt-get install frr -y
+
+vim /etc/frr/daemons
+	ospfd=yes
+
+systemctl enable --now frr
+
+vtysh
+conf t
+router ospf
+ip forwarding
+passive-interface default
+network 192.168.0.0/28 area 0
+network 10.10.10.0/30 area 0
+exit
+interface gre1
+no ip ospf passive
+ip ospf authentication message-digest
+ip ospf message-digest-key 1 md5 P@ssw0rd
+end
+wr
+ex
+
+vim /etc/net/sysctl.conf
+	net.ipv4.ip_forward = 1
+
+systemctl restart network

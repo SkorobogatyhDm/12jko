@@ -1,0 +1,32 @@
+#_______________________________________HQ-RTR__________________________________________
+apt-get update && apt-get install dhcp-server -y
+
+cp /etc/dhcp/dhcpd.conf.sample /etc/dhcp/dhcpd.conf
+
+# vim /etc/dhcp/dhcpd.conf
+	#See dhcpd.conf(5) for further configuration
+	
+	ddhs-update-style none;
+	
+	subnet 192.168.200.0 netmask 2555.255.255.0 {
+		option routers			192.168.200.1;
+		option subnet-mask		2555.255.255.0;
+
+		option nis-domain		"au-team.irpo";
+		option domain-name		"au-team.irpo";
+		option domain-name-servers	192.168.100.2;
+	
+		range dynamic-bootp 192.168.200.2 192.168.200.254;
+		default-lease-time 6000;
+		max-lease-time 72000;
+}
+
+systemctl enable --now dhcpd
+systemctl status dhcpd
+
+
+#_______________________________________HQ-CLI__________________________________________
+
+echo "BOOTPROTO=dhcp" >> /etc/net/ifaces/ens18/options
+systemctl restart network
+ip a или ip -c a
