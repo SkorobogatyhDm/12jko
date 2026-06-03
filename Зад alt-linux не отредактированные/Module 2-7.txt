@@ -1,0 +1,28 @@
+#_______________________________________HQ-SRV__________________________________________
+apt-get update && apt-get install lamp-server -y
+systemctl enable --now mariadb
+
+mount -o loop /dev/sr0 /mnt/ 
+
+cp -r /mnt/additional/web/{index.php,logo.png} /var/www/html/
+
+vim /var/www/html/index.php
+
+$servername = "localhost";
+$username = "webc";
+$password = "P@ssword";
+$dbname = "webdb";
+
+
+mariadb -u root
+
+CREATE DATABASE webdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'webc'@'localhost' IDENTIFIED BY 'P@ssw0rd';
+GRANT ALL PRIVILEGES ON webdb.* TO 'webc'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+mariadb -u webdb -p -D webdb < /mnt/web/dump.sql
+
+# P@ssw0rd
+
+systemctl enable --now httpd2

@@ -1,0 +1,61 @@
+#___________________________________HQ-RTR+BR-RTR_______________________________________
+
+apt-get update && apt-get install sudo
+
+useradd net_admin
+
+passwd net_admin
+	P@ssw0rd (2 раза попросят)
+
+usermod net_admin -aG wheel
+
+Редактируем файл /etc/sudoers
+
+	## User privilege specification
+	##
+	net_admin ALL=(ALL:ALL) ALL # раскомментировать тут
+
+	## Uncomment to allow members of group wheel to execute any command
+	# WHEEL_USERS ALL=(ALL:ALL) ALL
+
+	## Same thing without a password
+	net_admin ALL=(ALL:ALL) NOPASSWD: ALL # раскомментировать тут
+
+	## Uncomment to allow members of group sudo to execute any command
+	# SUDO_USERS ALL=(ALL:ALL) ALL
+
+проверка 
+
+	su - net_admin
+	sudo -i
+
+#___________________________________HQ-SRV+BR-SRV__________________________________
+
+useradd sshuser -u 2026
+
+passwd sshuser
+	P@ssw0rd (2 раза попросят)
+
+usermod sshuser -aG wheel
+
+Редактируем файл /etc/sudoers
+
+	## User privilege specification
+	##
+	sshuser ALL=(ALL:ALL) ALL # раскомментировать тут
+
+	## Uncomment to allow members of group wheel to execute any command
+	# WHEEL_USERS ALL=(ALL:ALL) ALL
+
+	## Same thing without a password
+	sshuser ALL=(ALL:ALL) NOPASSWD: ALL # раскомментировать тут
+
+	## Uncomment to allow members of group sudo to execute any command
+	# SUDO_USERS ALL=(ALL:ALL) ALL
+
+проверка 
+
+	su - net_admin
+	id -u
+	sudo -i
+

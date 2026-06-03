@@ -1,0 +1,39 @@
+#_______________________________________ISP_____________________________________________
+apt-get install chrony -y
+
+vim /etc/chrony.conf
+
+Коментируем
+#pool pool.ntp.org iburst 
+
+Меняет строчки(они в комментариях, просто	 уберите комментарии)
+local stratum 5
+allow 0.0.0.0/0
+
+После чего добавляем строчки
+server ntp0.ntp-servers.net iburst prefer minstratum 4
+
+systemctl restart chronyd
+chronyc tracking
+
+#__________________________HQ-RTR:BR-RTR:HQ-SRV:BR-SRV:HQ-CLI:__________________________________
+apt-get update && apt-get install chrony -y
+
+vim /etc/chrony.conf
+
+Комментируем
+#pool pool.ntp.org iburst 
+
+Добавляем строки
+server 172.16.1.n iburst
+
+systemctl restart chronyd
+
+Проверить
+chronyc sources
+
+Вывод команды chronyc sources
+MS Name/IP address         Stratum Poll Reach LastRx Last sample               
+===============================================================================
+^* 172.16.1.1 или gateway или 172.16.1.2                  5   6    17    16  +3777ns[  +28us] +/-   50ms
+

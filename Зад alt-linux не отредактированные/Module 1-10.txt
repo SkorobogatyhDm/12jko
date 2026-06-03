@@ -1,0 +1,27 @@
+#_______________________________________HQ-SRV__________________________________________
+
+apt-get update
+apt-get install dnsmasq -y
+
+vim /etc/dnsmasq.conf
+	no-hosts
+	domain=au-team.irpo
+	server=8.8.8.8
+	all-servers
+	no-negcache
+	interface=*
+	host-record=hq-rtr.au-team.irpo,192.168.100.1
+	host-record=hq-rtr.au-team.irpo,192.168.200.1
+	host-record=hq-rtr.au-team.irpo,192.168.99.1
+	host-record=hq-srv.au-team.irpo,192.168.100.2
+	host-record=hq-cli.au-team.irpo,192.168.200.2
+	address=/web.au-team.irpo/172.16.2.1
+	address=/docker.au-team.irpo/172.16.1.1
+	address=/br-rtr.au-team.irpo/192.168.0.1
+	address=/br-srv.au-team.irpo/192.168.0.2
+
+systemctl enable --now dnsmasq.conf
+
+#_______________________________________OTHERS__________________________________________
+
+echo nameserver 192.168.100.2 >> /etc/net/iface/ens18(например)/resolv.conf

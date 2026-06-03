@@ -1,0 +1,29 @@
+#_______________________________________ISP_____________________________________________
+apt-get install apache2-htpasswd -y
+
+htpasswd -bc /etc/nginx/.htpasswd WEB P@ssw0rd
+
+vim /etc/nginx/sites-available.d/proxy.conf
+
+server {
+    listen 80;
+    server_name web.au-team.irpo;
+    
+    
+    location / {
+        proxy_pass http://172.16.1.10:8080;
+    	# Здесь добавьте строчку.
+    	auth_basic "Restricted Access";
+    	auth_basic_user_file /etc/nginx/.htpasswd;
+    }
+}
+server {
+    listen 80;
+    server_name docker.au-team.irpo;
+    
+    location / {
+        proxy_pass http://172.16.2.10:8080;
+    }
+}
+
+systemctl restart nginx

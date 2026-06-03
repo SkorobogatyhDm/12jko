@@ -1,0 +1,19 @@
+_______________________________________HQ-SRV__________________________________________
+apt-get install nfs-server -y
+mkdir /raid/nfs
+chmod 777 /raid/nfs
+
+vim /etc/exports
+	/raid/nfs 192.168.200.0/24(rw)
+exportfs -arv
+systemctl enable --now nfs
+
+
+_______________________________________HQ-CLI__________________________________________
+mkdir -p /mnt/nfs
+chmod -R 777 /mnt/nfs
+vim /etc/fstab
+	192.168.100.2:/raid/nfs /mnt/nfs nfs defaults 0 0
+
+mount -av
+touch /mnt/nfs/test

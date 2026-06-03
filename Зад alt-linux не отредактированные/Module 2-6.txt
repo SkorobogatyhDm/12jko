@@ -1,0 +1,40 @@
+#_______________________________________BR-SRV__________________________________________
+apt-get update && apt-get install docker-compose docker-engine -y
+systemctl enable --now docker
+mount -o loop /dev/sr0 /mnt/
+docker load -i /mnt/docker/site_latest.tar
+docker load -i /mnt/docker/mariadb_latest.tar
+
+vim compose.yaml
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: db
+    environment:
+      MARIADB_DATABASE: "testdb"
+      MARIADB_USER: "test"
+      MARIADB_PASSWORD: "P@ssw0rd"
+      MARIADB_ROOT_PASSWORD: "P@ssw0rd"
+    restart: always
+    ports:
+      - "3306:3306"
+
+  testapp:
+    image: site:latest
+    container_name: testapp
+    environment:
+      DB_TYPE: "maria"
+      DB_HOST: db
+      DB_NAME: "testdb"
+      DB_USER: "testc"
+      DB_PASS: "P@ssw0rd"
+      DB_PORT: "3306"
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+    restart: always
+
+docker compose -f site.yml up -d
+docker compose -f site.yml logs testapp 

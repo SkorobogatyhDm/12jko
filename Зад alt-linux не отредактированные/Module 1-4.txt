@@ -1,0 +1,72 @@
+#_______________________________________HQ-RTR__________________________________________
+
+mkdir /etc/net/ifaces/ens19
+mkdir /etc/net/ifaces/vlan100
+mkdir /etc/net/ifaces/vlan200
+mkdir /etc/net/ifaces/vlan999
+
+echo TYPE=eth > /etc/net/ifaces/ens19/options
+echo default via 172.16.1.2 > /etc/net/ifaces/ens19/options
+
+vim /etc/net/ifaces/vlan100/options
+	TYPE=vlan
+	HOST=ens19
+	VID=100
+vim /etc/net/ifaces/vlan200/options
+	TYPE=vlan
+	HOST=ens19
+	VID=200
+vim /etc/net/ifaces/vlan999/options
+	TYPE=vlan
+	HOST=ens19
+	VID=999
+echo 192.168.100.1/27 > /etc/net/ifaces/vlan100/ipv4address
+echo 192.168.200.1/24 > /etc/net/ifaces/vlan200/ipv4address
+echo 192.168.99.1/29 > /etc/net/ifaces/vlan999/ipv4address
+
+systemctl restart network
+
+Проверка
+	ip a или ip -c a (цветная)
+#_______________________________________HQ-SRV__________________________________________
+
+mkdir /etc/net/ifaces/vlan100
+
+echo TYPE=eth > /etc/net/ifaces/ens18/options
+echo default via 192.168.100.1 > /etc/net/ifaces/ens19/options
+
+vim /etc/net/ifaces/vlan100/options
+	TYPE=vlan
+	HOST=ens18
+	VID=100
+
+echo 192.168.100.2/27 > /etc/net/ifaces/vlan100/ipv4address
+
+systemctl restart network
+
+Проверка
+	ip a или ip -c a (цветная)
+	ping 192.168.100.1 и 8.8.8.8
+
+#_______________________________________HQ-CLI__________________________________________
+
+kdir /etc/net/ifaces/vlan200
+
+echo TYPE=eth > /etc/net/ifaces/ens18/options
+echo default via 192.168.200.1 > /etc/net/ifaces/ens19/options
+
+vim /etc/net/ifaces/vlan100/options
+	TYPE=vlan
+	HOST=ens18
+	VID=200
+
+echo 192.168.200.2/24 > /etc/net/ifaces/vlan100/ipv4address
+
+systemctl restart network
+
+Проверка
+	ip a или ip -c a (цветная)
+	ping 192.168.100.1 и 8.8.8.8
+
+
+

@@ -1,0 +1,38 @@
+#_______________________________________ISP_____________________________________________
+
+apt-get install nginx -y
+
+vim /etc/nginx/sites-available.d/default.conf
+
+server {
+    listen 80;
+    server_name web.au-team.irpo;
+    
+    location / {
+        proxy_pass http://172.16.2.10:8080;
+    }
+}
+
+server {
+    listen 80;
+    server_name docker.au-team.irpo;
+    
+    location / {
+        proxy_pass http://172.16.1.10:8080;
+    }
+}
+
+ln -sf /etc/nginx/sites-available.d/proxy.conf /etc/nginx/sites-enabled.d/
+
+nginx -t
+# Исправляйте ошибки.
+systemctl enable --now nginx
+
+
+#______________________________________HQ-CLI_____________________________________________
+
+
+echo "172.16.1.1 web.au-team.irpo" >> /etc/hosts
+echo "172.16.2.1 docker.au-team.irpo" >> /etc/hosts
+
+Затем в браузере проверяем доступность.
