@@ -2,9 +2,7 @@
 
 apt-get update && apt-get install task-samba-dc -y
 
-rm -rf /etc/samba/smb.conf
-#rm -rf /var/lib/samba/
-#rm -rf /var/cache/samba/
+rm -rf /etc/samba/smb.conf
 
 mkdir -p /var/lib/samba/sysvol
 
