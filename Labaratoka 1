@@ -1,8 +1,0 @@
-man:Outputting the manual page
-info:Outputting the man page in GNU textinfo format
-echo:Outputting a text string
-pwd:Priting the user's current working directory
-date:Displays the current system date and timne
-who:Displaying a list of users authorized in the system
-ls:Displaying the contents of a directory
-cat:Outputting the contents of the file(s)
