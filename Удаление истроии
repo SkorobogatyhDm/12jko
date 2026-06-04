@@ -1,0 +1,8 @@
+
+Apt- get remove git
+
+Rm -rf (твоя методичка, и путь до неё куда ты её скачивал)
+
+history -c
+
+echo "" > ~/.bash_history
