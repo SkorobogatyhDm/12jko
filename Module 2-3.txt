@@ -22,7 +22,7 @@ mkdir -p /mnt/nfs
 chmod -R 777 /mnt/nfs
 
 vim /etc/fstab
-	192.168.100.2:/raid/nfs /mnt/nfs nfs defaults 0 0
+	192.168.100.2:/raid/nfs /mnt/nfs nfs defaults,_netdev 0 0
 
 или
 
